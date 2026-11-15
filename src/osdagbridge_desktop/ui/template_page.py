@@ -1369,6 +1369,23 @@ class CustomWindow(QWidget):
         from PySide6.QtCore import Qt
         import sys, os, traceback
 
+        if not hasattr(self, 'backend') \
+                or self.backend is None:
+            CustomMessageBox(
+                title="Report Error",
+                text="No design backend available. "
+                        "Run design first.",
+                dialogType=MessageBoxType.Critical,
+            ).exec()
+            return
+        else:
+            if self.backend.design_completed is not True:
+                CustomMessageBox(
+                    title="Run Design",
+                    text="Please run the design first.",
+                    dialogType=MessageBoxType.Warning,
+                ).exec()
+                return
         try:
             dialog = ReportOptionsDialog(parent=self)
 
@@ -1384,16 +1401,6 @@ class CustomWindow(QWidget):
                 return
 
             request = dialog.request
-
-            if not hasattr(self, 'backend') \
-                    or self.backend is None:
-                CustomMessageBox(
-                    title="Report Error",
-                    text="No design backend available. "
-                         "Run design first.",
-                    dialogType=MessageBoxType.Critical,
-                ).exec()
-                return
 
             backend = self.backend
 

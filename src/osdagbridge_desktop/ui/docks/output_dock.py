@@ -608,8 +608,6 @@ class OutputDock(QWidget):
         no report logic — it captures CAD figures on the main
         thread (Qt-safe) and passes paths to the report worker.
         """
-        if not self._require_design():
-            return
         import os
 
         # Find cad_3d_widget
@@ -816,6 +814,8 @@ class OutputDock(QWidget):
     def _on_report_clicked(self):
         """Open the report dialog, passing the CAD generator and captured figures."""
         # Find dialog host and trigger
+        if not self._require_design():
+            return
         cad_generator = self._capture_data()
         main_window = self.parent
         main_window.open_report_dialog(cad_generator=cad_generator)
